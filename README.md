@@ -60,6 +60,9 @@ Root-Mean-Squared-Error of student's algorithm's predictions and answers in real
 * 2020/3/31 ~ 2020/4/14 (清明節為 4/4)
 其餘皆為訓練資料 (2019/01/01 ~ 2022/02/28、2022/03/29?)
 
+### **3-GRU and 1 DNN 混合式架構**
+(放方塊圖) 
+
 ## LISTING
 (此處為簡要說明各檔案的功能)
 
