@@ -60,13 +60,27 @@ Root-Mean-Squared-Error of student's algorithm's predictions and answers in real
 * 2020/3/31 ~ 2020/4/14 (清明節為 4/4)
 其餘皆為訓練資料 (2019/01/01 ~ 2022/02/28、2022/03/29?)
 
+### 透過快速傅立葉轉換觀察數據週期性
+本實驗一共蒐集 2019 ~ 2022 大約 3 年多的資料，值觀可發覺數據有逐年攀升的趨勢，且明顯存在兩種主要頻率
+![](https://github.com/kuihao/DSAI-HW-2022/blob/main/log/img/TimeDomain_1.png?raw=true)
+我又透過 Tensorflow 提供的實數快速傅立葉轉換進行分析，並得到確信變化的頻率：
+![](https://github.com/kuihao/DSAI-HW-2022/blob/main/log/img/FreqDomain_NPC.png?raw=true)
+![](https://github.com/kuihao/DSAI-HW-2022/blob/main/log/img/FreqDomain_PL.png?raw=true)
+![](https://github.com/kuihao/DSAI-HW-2022/blob/main/log/img/FreqDomain_OR.png?raw=true)
+由上圖可知，Net Peaking Capability 與 Peak Load 確實非常相似，並且在頻域中可見 1/周、1/3.5天、1/2.3天，存在較為明顯的週期性變化。對照實際日期後會發現，每當「周日、周一」時，Net Peaking Capability 與 Peak Load 會特別低；反之其他日子，Net Peaking Capability 與 Peak Load 都有攀升現象。因此，可見「星期幾」是相當重要的因素之一。
+
 ### **2+2 GRU and 1 DNN 混合式架構**
 本次實驗共使用 3 個模型進行預測，
 * 模型一
 ![Main-model](https://github.com/kuihao/DSAI-HW-2022/blob/main/log/img/model_blockimg.png?raw=true)
   * 使用兩個 GRU (一個專門學習 Net Peaking Capability 的變化趨勢、一個專門學習 Peak Load 的變化趨勢)，兩 GRU 合併時是由 Net Peaking Capability GRU 的輸出減去 Peak Load GRU 的輸出，以此模擬台電所聲稱的公式。
   * 同時，我還加入第三個 DNN 輸入，此為模型擴充微調的部分，可以於此處加入當天的氣溫、雨量、溫溼度...等資訊，二度強化模型。但因為時間因素，本次只有加入星期的特徵。
+  * 此模型會根據前 7 天的 Net Peaking Capability 與 Peak Load、星期、特殊日子的電力特徵來輸出未來 1 天的 Operating Reserve.
 * 模型二與三:
+![](https://github.com/kuihao/DSAI-HW-2022/blob/main/log/img/model2_blockimg.png?raw=true)
+  * 模型二是我再利用另外一個 GRU 模型，學前 7 天的 Net Peaking Capability 變化，輸出未來一天的  Net Peaking Capability 
+  * 模型三是我再利用另外一個 GRU 模型，學前 7 天的 Peak Load 變化，輸出未來一天的 Peak Load
+透過三個大模型的交互作用來得出最終的備轉容量 (Operating Reserve)。
 
 ## LISTING
 (此處為簡要說明各檔案的功能)
@@ -95,6 +109,16 @@ Root-Mean-Squared-Error of student's algorithm's predictions and answers in real
       * [裝置容量](https://smctw.tw/4223/) 是指該設備出廠時，所設計滿載（百分之百全力發電）時的最大值，不同的設備常用的單位會不同。
 * Random seed: 
 ## TRAINING AND TUNING (訓練階段)
-(數據快來了 再等等)
+平均每次模型都會訓練上千個 epoch，起初會將學習率設為 10，加速梯度下降速度，較後期會將學習率逐漸調小。**(由於模型眾多且龐大、訓練時間非常冗長，訓練過程需要手動中斷等等，本實驗已先將模型訓練完畢並儲存於資料夾，app.py 會直接讀取模型存檔，為保留公平原則，一切實驗方法都保存於 app.ipynb 以供查驗，絕無犯規作弊。)**
+![](https://github.com/kuihao/DSAI-HW-2022/blob/main/log/img/training_stage_2_lr1e2.png?raw=true)
+
+## 最佳模型結果:
+本實驗的驗證集採用與最終評分相似的 2020、2021 年的清明節前後兩周作為評估：
+```python 
+m = tf.keras.metrics.RootMeanSquaredError()
+m.update_state(Pred_valid, [GroundTruth_valid])
+m.result().numpy()
+```
+**得出的 Operating Reserve RMSE 結果為: 423.14825**
 ## EVALUTION (測試階段)
 (等待評分結果)
