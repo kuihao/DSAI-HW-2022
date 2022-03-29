@@ -60,8 +60,13 @@ Root-Mean-Squared-Error of student's algorithm's predictions and answers in real
 * 2020/3/31 ~ 2020/4/14 (清明節為 4/4)
 其餘皆為訓練資料 (2019/01/01 ~ 2022/02/28、2022/03/29?)
 
-### **3-GRU and 1 DNN 混合式架構**
-(放方塊圖) 
+### **2+2 GRU and 1 DNN 混合式架構**
+本次實驗共使用 3 個模型進行預測，
+* 模型一
+![Main-model](https://github.com/kuihao/DSAI-HW-2022/blob/main/log/img/model_blockimg.png?raw=true)
+  * 使用兩個 GRU (一個專門學習 Net Peaking Capability 的變化趨勢、一個專門學習 Peak Load 的變化趨勢)，兩 GRU 合併時是由 Net Peaking Capability GRU 的輸出減去 Peak Load GRU 的輸出，以此模擬台電所聲稱的公式。
+  * 同時，我還加入第三個 DNN 輸入，此為模型擴充微調的部分，可以於此處加入當天的氣溫、雨量、溫溼度...等資訊，二度強化模型。但因為時間因素，本次只有加入星期的特徵。
+* 模型二與三:
 
 ## LISTING
 (此處為簡要說明各檔案的功能)
@@ -80,8 +85,8 @@ Root-Mean-Squared-Error of student's algorithm's predictions and answers in real
         * 2021: 透過檢視資料 > 多元格式參考資料 > `CSV 按鈕` 取得
     * [台灣電力公司_近三年每日尖峰備轉容量率](https://data.gov.tw/dataset/24945) *(Download date: 2022/03/27)*
       * 紀錄 2019/1/1 ~ 2021/12/31 每日尖峰的「備轉容量(萬瓩)」與「備轉容量率(%)」
-    * [當天天氣](https://opendata.cwb.gov.tw/dataset/observation/O-A0003-001) 
-    * [當天空氣品質](https://data.gov.tw/dataset/40448)
+    * [當天天氣](https://opendata.cwb.gov.tw/dataset/observation/O-A0003-001)(來不及使用) 
+    * [當天空氣品質](https://data.gov.tw/dataset/40448)(來不及使用)
     * [台灣電力公司_未來兩年機組大修停機排程](https://data.gov.tw/dataset/35393) *(Download date: 2022/03/27)*
       * 2022~2023: 透過 `CSV 按鈕` 取得 
       * 2021~2022: 透過檢視資料 > 多元格式參考資料 > `CSV 按鈕` 取得
