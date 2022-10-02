@@ -3,7 +3,7 @@ The homework-1 of the [NCKU](https://www.ncku.edu.tw/index.php?Lang=en) course w
 
 ## PROBLEM DESPRICTION
 ### TASK
-In this HW, we will implement an algorithm to predict the **operating reserve (備轉容量)** of electrical power. Given a time series electricity data to predict the value of the operating reserve value of **each day during 2022/03/30 ~ 2022/04/13.**
+In this HW, we will implement an algorithm to predict the **operating reserve (備轉容量)** of Taiwan Power Company. Given a time series electricity data to predict the value of the operating reserve value of **each day during 2022/03/30 ~ 2022/04/13.**
 ### LIMITION
 (Claimed by teaching assistant at 2022/03/22, Tue, 16:37 in NCKU Moodle)
 * 訓練階段中，訓練資料集只能使用 2022 年 3 月 30 日 00:00 前的資料
