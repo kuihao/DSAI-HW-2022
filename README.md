@@ -121,4 +121,6 @@ m.result().numpy()
 ```
 **得出的 Operating Reserve RMSE 結果為: 423.14825**
 ## EVALUTION (測試階段)
-(等待評分結果)
+* Result Ranking: 1/62
+* Grade distribution:
+    * <img src="log/img/hw1_rank.jpg" height="50%" width="50%">
